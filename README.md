@@ -1,9 +1,9 @@
-﻿# Game Boy sur NumWorks â€” guide
+﻿# Game Boy sur NumWorks — guide
 
-Petit site statique (un seul fichier `index.html`) qui explique comment installer l'Ã©mulateur
+Petit site statique (un seul fichier `index.html`) qui explique comment installer l'émulateur
 Peanut-GB sur une calculatrice NumWorks, les commandes, et comment sauvegarder une partie.
 
-Aucune ROM n'est fournie ni liÃ©e.
+Aucune ROM n'est fournie ni liée.
 
 ## Utilisation
 
