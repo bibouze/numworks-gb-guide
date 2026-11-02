@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Boy sur NumWorks</title>
+<meta name="description" content="Guide : installer l'émulateur Peanut-GB sur une NumWorks, commandes et sauvegarde.">
+<style>
+  :root { --bg:#fafaf7; --fg:#1d1d1b; --muted:#5d5d58; --card:#ffffff; --line:#e2e2db; --accent:#b8860b; --warn:#fff4d6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161614; --fg:#ecece6; --muted:#a3a39b; --card:#20201d; --line:#34342f; --accent:#e0b44a; --warn:#3a3016; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:1.9rem; margin:0 0 4px; }
+  h2 { font-size:1.25rem; margin:36px 0 10px; }
+  p.lead { color:var(--muted); margin-top:0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 18px; margin:12px 0; }
+  .warn { background:var(--warn); border-color:var(--accent); }
+  table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  th, td { text-align:left; padding:8px 12px; border-bottom:1px solid var(--line); }
+  th { font-size:.85rem; color:var(--muted); }
+  kbd { background:var(--bg); border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:1px 7px; font:inherit; font-size:.9em; }
+  a { color:var(--accent); }
+  a.btn { display:inline-block; margin-top:4px; padding:6px 14px; border:1px solid var(--accent); border-radius:8px; text-decoration:none; font-weight:600; }
+  ol li, ul li { margin:6px 0; }
+  footer { margin-top:48px; color:var(--muted); font-size:.85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Game Boy sur NumWorks</h1>
+  <p class="lead">Comment installer l'émulateur Peanut-GB, jouer et sauvegarder sa partie.</p>
+
+  <div class="card warn">
+    <strong>À savoir :</strong> ce guide ne fournit aucune ROM. Utilise uniquement un fichier <code>.gb</code> que tu as le droit d'avoir
+    (dump de ta propre cartouche, ou un jeu libre comme Flappy Boy). Les apps externes peuvent aussi ne pas être acceptées pendant
+    un examen : vérifie le règlement avant une épreuve.
+  </div>
+
+  <h2>0. Les deux fichiers à télécharger</h2>
+  <div class="card">
+    <p><strong>L'émulateur</strong> (fichier <code>.nwa</code>, version 1.2.3) :<br>
+      <a class="btn" href="https://nwagyu.org/assets/apps/peanutgb-1.2.3.nwa" download>Télécharger peanutgb-1.2.3.nwa</a></p>
+    <p><strong>Un jeu de test</strong> (Flappy Boy, fichier <code>.gb</code>, fourni avec l'émulateur) :<br>
+      <a class="btn" href="https://github.com/nwagyu/peanutgb/raw/refs/heads/master/src/flappyboy.gb" download>Télécharger flappyboy.gb</a></p>
+    <p>Pour un autre jeu, il te faut ta propre ROM <code>.gb</code> (dump de ta cartouche). Elle n'est pas fournie ici.
+      Les liens pointent vers les sites d'origine, rien n'est hébergé sur cette page.</p>
+  </div>
+
+  <h2>1. Installer l'émulateur</h2>
+  <ol>
+    <li>Télécharge les deux fichiers ci-dessus (ou une version plus récente de <strong>Peanut-GB</strong> sur
+      <a href="https://nwagyu.org/guide/apps/peanut-gb.html">nwagyu.org</a>).</li>
+    <li>Branche la calculatrice en USB avec un câble de données.</li>
+    <li>Ouvre <a href="https://my.numworks.com/apps">my.numworks.com/apps</a> avec Chrome ou Edge.</li>
+    <li>Sélectionne le fichier <code>.nwa</code>, puis ta ROM <code>.gb</code> dans le champ « external data ».</li>
+    <li>Clique sur <strong>Install</strong> et choisis <strong>NumWorks</strong> dans la fenêtre USB.</li>
+  </ol>
+  <p>Utilise la version récente du site de l'auteur : l'ancienne version de la page GitHub Releases (1.0.0, 2022)
+    affiche un carré noir autour des sprites dans les jeux Pokémon.</p>
+
+  <h2>2. Commandes</h2>
+  <table>
+    <tr><th>Calculatrice</th><th>Game Boy</th></tr>
+    <tr><td>Flèches</td><td>Croix directionnelle</td></tr>
+    <tr><td><kbd>Retour</kbd></td><td>A</td></tr>
+    <tr><td><kbd>OK</kbd></td><td>B</td></tr>
+    <tr><td><kbd>Shift</kbd></td><td>Select</td></tr>
+    <tr><td><kbd>Home</kbd> ou <kbd>⌫</kbd></td><td>Start</td></tr>
+  </table>
+
+  <h2>3. Touches de l'émulateur</h2>
+  <table>
+    <tr><th>Touche</th><th>Effet</th></tr>
+    <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>Change la palette de couleurs</td></tr>
+    <tr><td><kbd>+</kbd></td><td>Plein écran</td></tr>
+    <tr><td><kbd>−</kbd></td><td>Format d'origine</td></tr>
+    <tr><td><kbd>7</kbd></td><td>Affiche les temps d'image</td></tr>
+    <tr><td><kbd>9</kbd></td><td>Active On/Off et Home (à presser à chaque entrée dans l'émulateur)</td></tr>
+  </table>
+
+  <h2>4. Sauvegarder sa partie</h2>
+  <div class="card">
+    <p><strong>Il y a deux étapes, dans cet ordre :</strong></p>
+    <ol>
+      <li><strong>Dans le jeu</strong> : ouvre le menu avec <kbd>⌫</kbd> (Start), choisis <em>SAUVER</em>, valide avec <kbd>Retour</kbd> (A).</li>
+      <li><strong>Sur la calculatrice</strong> : appuie sur <kbd>Boîte à outils</kbd> pour écrire la sauvegarde,
+        ou sur <kbd>0</kbd> pour écrire la sauvegarde <em>et</em> quitter.</li>
+    </ol>
+    <p>Si tu quittes sans passer par là, tu peux perdre ta progression. Teste une fois : sauvegarde, quitte avec <kbd>0</kbd>,
+      relance l'app et vérifie que ta partie est là.</p>
+  </div>
+
+  <h2>Mode examen</h2>
+  <p>Le mode examen officiel se règle dans <em>Paramètres → Mode examen</em>. Les apps externes (émulateur, jeux) peuvent rendre
+    la calculatrice non conforme : demande à ton établissement et supprime-les avant l'épreuve si besoin.</p>
+
+  <footer>
+    Guide non officiel, sans lien avec NumWorks. Peanut-GB est un projet tiers (voir
+    <a href="https://nwagyu.org/guide/apps/peanut-gb.html">nwagyu.org</a>). Contenu sous licence MIT.
+  </footer>
+</main>
+</body>
+</html>
