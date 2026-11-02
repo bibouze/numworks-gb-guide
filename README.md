@@ -1,22 +1,16 @@
-# Game Boy sur NumWorks — guide
+﻿# Game Boy sur NumWorks â€” guide
 
-Petit site statique (un seul fichier `index.html`) qui explique comment installer l'émulateur
+Petit site statique (un seul fichier `index.html`) qui explique comment installer l'Ã©mulateur
 Peanut-GB sur une calculatrice NumWorks, les commandes, et comment sauvegarder une partie.
 
-Aucune ROM n'est fournie ni liée.
+Aucune ROM n'est fournie ni liÃ©e.
 
 ## Utilisation
 
-Ouvre `index.html` dans un navigateur, ou publie le dossier sur GitHub Pages ou Netlify
-(aucun serveur ni build nécessaire).
+Site publié via GitHub Pages : https://bibouze.github.io/numworks-gb-guide/
 
-### GitHub Pages
-1. Crée un dépôt public et pousse ces fichiers.
-2. Settings → Pages → Source : branche `main`, dossier `/ (root)`.
-
-### Netlify
-Glisse le dossier sur https://app.netlify.com/drop.
+Pour l'héberger toi-même : Settings → Pages → branche `main`, dossier `/ (root)`. Aucun serveur ni build nécessaire.
 
 ## Licence
 
-MIT, voir `LICENSE`. Projet non officiel, sans lien avec NumWorks.
+MIT, voir `LICENSE` : tout le monde peut utiliser, copier et modifier ce code librement. La licence ne couvre que ce guide, pas Peanut-GB ni les jeux liés, qui ont leurs propres conditions. Projet non officiel, sans lien avec NumWorks.
