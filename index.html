@@ -2,950 +2,985 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Guide Game Boy sur NumWorks avec Peanut-GB.">
-<title>Game Boy sur NumWorks</title>
-
-<style>
-:root {
-  --bg: #090d16;
-  --panel: #131a28;
-  --panel2: #192234;
-  --border: #2c394f;
-  --text: #eff5ff;
-  --muted: #a2b0c4;
-  --green: #9df46d;
-  --blue: #7dbcfb;
-  --orange: #ffc778;
-}
-
-* { box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  background:
-    radial-gradient(
-      ellipse 80% 36% at 50% 0%,
-      #1b3350 0%,
-      transparent 75%
-    ),
-    var(--bg);
-  color: var(--text);
-  font: 16px/1.65 system-ui, sans-serif;
-}
-
-a { color: inherit; }
-
-nav {
-  min-height: 72px;
-  border-bottom: 1px solid #ffffff15;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px max(24px, calc((100vw - 1100px) / 2));
-  gap: 20px;
-}
-
-.brand {
-  font-weight: 900;
-  letter-spacing: -.04em;
-  font-size: 1.18rem;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.brand-icon {
-  background: var(--green);
-  color: #142516;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  width: 33px;
-  height: 33px;
-  font-size: 20px;
-}
-
-.brand span:last-child { color: var(--green); }
-
-nav .links {
-  display: flex;
-  gap: 24px;
-  font-size: .9rem;
-  color: var(--muted);
-}
-
-nav .links a { text-decoration: none; }
-nav .links a:hover { color: white; }
-
-.wrap {
-  max-width: 1100px;
-  margin: auto;
-  padding: 0 24px;
-}
-
-.hero {
-  padding: 80px 0 72px;
-  display: grid;
-  grid-template-columns: 1.15fr .85fr;
-  gap: 45px;
-  align-items: center;
-}
-
-.eyebrow {
-  color: var(--green);
-  text-transform: uppercase;
-  letter-spacing: .17em;
-  font-size: .75rem;
-  font-weight: 900;
-}
-
-.hero h1 {
-  font-size: clamp(2.8rem, 5.5vw, 5.2rem);
-  line-height: 1.05;
-  letter-spacing: -.065em;
-  margin: 16px 0 20px;
-}
-
-.hero h1 span { color: var(--green); }
-
-.hero p {
-  color: var(--muted);
-  max-width: 570px;
-  font-size: 1.12rem;
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 28px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  text-decoration: none;
-  background: var(--green);
-  color: #102014;
-  border: 1px solid var(--green);
-  font-size: .94rem;
-  font-weight: 800;
-  border-radius: 11px;
-  padding: 13px 19px;
-  cursor: pointer;
-  transition: transform .15s, background .15s;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  background: #c0ff97;
-}
-
-.btn.outline {
-  background: #ffffff0b;
-  color: var(--text);
-  border-color: #ffffff35;
-}
-
-.btn.outline:hover { background: #ffffff1a; }
-
-.device {
-  background: linear-gradient(145deg, #35465b, #172130);
-  border-radius: 24px;
-  padding: 25px;
-  max-width: 350px;
-  margin: auto;
-  box-shadow:
-    18px 22px 50px #0008,
-    inset 2px 2px 2px #ffffff40;
-  transform: rotate(3deg);
-}
-
-.screen {
-  background: #93b88f;
-  border: 14px solid #111827;
-  border-radius: 13px;
-  padding: 21px 16px 12px;
-  aspect-ratio: 1.08;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #1b402e;
-  box-shadow: inset 0 0 24px #41613d70;
-}
-
-.screen .pixel {
-  font: 900 2rem/1.2 ui-monospace, monospace;
-  letter-spacing: -.07em;
-  text-align: center;
-}
-
-.screen small {
-  text-align: center;
-  font: 700 .65rem monospace;
-}
-
-.controls {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 25px 0 0;
-}
-
-.dpad {
-  width: 77px;
-  height: 77px;
-  position: relative;
-}
-
-.dpad::before,
-.dpad::after {
-  content: "";
-  position: absolute;
-  background: #0a111e;
-  border-radius: 4px;
-}
-
-.dpad::before {
-  width: 27px;
-  height: 77px;
-  left: 25px;
-}
-
-.dpad::after {
-  width: 77px;
-  height: 27px;
-  top: 25px;
-}
-
-.ab {
-  display: flex;
-  gap: 14px;
-  transform: rotate(-20deg);
-}
-
-.ab span {
-  background: #0d1523;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  font-size: .7rem;
-  font-weight: 800;
-}
-
-.section {
-  padding: 60px 0;
-  border-top: 1px solid #ffffff17;
-}
-
-.section h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.7rem);
-  letter-spacing: -.045em;
-  line-height: 1.13;
-  margin: 6px 0 24px;
-}
-
-.sub {
-  color: var(--muted);
-  margin: 0 0 24px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-.card {
-  background: linear-gradient(160deg, var(--panel2), var(--panel));
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 24px;
-}
-
-.card .label {
-  color: var(--muted);
-  font-size: .77rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-top: 18px;
-}
-
-.card h3 {
-  margin: 10px 0 7px;
-  font-size: 1.25rem;
-}
-
-.card p {
-  color: var(--muted);
-  font-size: .9rem;
-}
-
-.card .btn {
-  width: 100%;
-  margin-top: 15px;
-}
-
-.filetype {
-  font: 800 .85rem ui-monospace, monospace;
-  color: var(--green);
-  background: #9df46d1b;
-  border-radius: 6px;
-  padding: 5px 9px;
-}
-
-.warning-label {
-  color: var(--orange) !important;
-  font-weight: 800;
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 13px;
-  counter-reset: steps;
-}
-
-.step {
-  padding: 22px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--panel);
-  display: flex;
-  gap: 17px;
-}
-
-.step::before {
-  counter-increment: steps;
-  content: counter(steps);
-  flex: 0 0 35px;
-  height: 35px;
-  border-radius: 10px;
-  background: #9df46d1c;
-  color: var(--green);
-  display: grid;
-  place-items: center;
-  font-weight: 900;
-}
-
-.step h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.step p {
-  margin: 5px 0 0;
-  color: var(--muted);
-  font-size: .9rem;
-}
-
-.step a { color: var(--blue); }
-
-.note {
-  border: 1px solid #957947;
-  background: #ffc77812;
-  padding: 18px 20px;
-  border-radius: 14px;
-  color: #f4d8a9;
-  margin-top: 23px;
-  font-size: .91rem;
-}
-
-.twocol, .save {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: .92rem;
-}
-
-th, td {
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  padding: 12px 7px;
-}
-
-th {
-  color: var(--muted);
-  font-size: .78rem;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-tr:last-child td { border: 0; }
-
-kbd {
-  background: #ffffff12;
-  border: 1px solid #ffffff35;
-  border-bottom-width: 3px;
-  border-radius: 6px;
-  padding: 2px 7px;
-  white-space: nowrap;
-  font-family: inherit;
-  font-size: .83em;
-}
-
-.save .card { border-color: #638654; }
-
-.save .num {
-  font-size: 2rem;
-  font-weight: 900;
-  color: var(--green);
-}
-
-footer {
-  padding: 36px 24px;
-  color: var(--muted);
-  border-top: 1px solid #ffffff17;
-  font-size: .82rem;
-  text-align: center;
-}
-
-footer a {
-  color: var(--blue);
-  text-decoration: none;
-}
-
-footer a:hover { text-decoration: underline; }
-
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin: 20px 0;
-}
-
-.signature {
-  margin-top: 22px;
-  color: var(--green);
-  font-size: 1rem;
-  font-weight: 900;
-  letter-spacing: .08em;
-}
-
-@media (max-width: 800px) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 55px 0;
-  }
-
-  .device { max-width: 275px; }
-
-  .grid, .steps, .twocol, .save {
-    grid-template-columns: 1fr;
-  }
-
-  nav .links { display: none; }
-  .section { padding: 44px 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { transition: none !important; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Guide Game Boy sur NumWorks avec Peanut-GB.">
+  <title>by bibouze</title>
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --panel: #131a28;
+      --panel2: #192234;
+      --border: #2c394f;
+      --text: #eff5ff;
+      --muted: #a2b0c4;
+      --green: #9df46d;
+      --blue: #7dbcfb;
+      --orange: #ffc778;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(
+          ellipse 80% 36% at 50% 0%,
+          #1b3350 0%,
+          transparent 75%
+        ),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.65 system-ui, sans-serif;
+    }
+
+    a { color: inherit; }
+
+    nav {
+      min-height: 72px;
+      border-bottom: 1px solid #ffffff15;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px max(24px, calc((100vw - 1100px) / 2));
+      gap: 20px;
+    }
+
+    .brand {
+      font-weight: 900;
+      letter-spacing: -.04em;
+      font-size: 1.18rem;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-icon {
+      background: var(--green);
+      color: #142516;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      width: 33px;
+      height: 33px;
+      font-size: 20px;
+    }
+
+    .brand span:last-child { color: var(--green); }
+
+    nav .links {
+      display: flex;
+      gap: 24px;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    nav .links a { text-decoration: none; }
+    nav .links a:hover { color: white; }
+
+    .wrap {
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 24px;
+    }
+
+    .hero {
+      padding: 80px 0 72px;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 45px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .17em;
+      font-size: .75rem;
+      font-weight: 900;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5.5vw, 5.2rem);
+      line-height: 1.05;
+      letter-spacing: -.065em;
+      margin: 16px 0 20px;
+    }
+
+    .hero h1 span { color: var(--green); }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 570px;
+      font-size: 1.12rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      text-decoration: none;
+      background: var(--green);
+      color: #102014;
+      border: 1px solid var(--green);
+      font-size: .94rem;
+      font-weight: 800;
+      border-radius: 11px;
+      padding: 13px 19px;
+      cursor: pointer;
+      transition: transform .15s, background .15s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #c0ff97;
+    }
+
+    .btn.outline {
+      background: #ffffff0b;
+      color: var(--text);
+      border-color: #ffffff35;
+    }
+
+    .btn.outline:hover { background: #ffffff1a; }
+
+    /* Console rétro */
+
+    .device {
+      background: linear-gradient(145deg, #35465b, #172130);
+      border-radius: 24px;
+      padding: 25px;
+      max-width: 350px;
+      margin: auto;
+      box-shadow:
+        18px 22px 50px #0008,
+        inset 2px 2px 2px #ffffff40;
+      transform: rotate(3deg);
+    }
+
+    .screen {
+      background: #93b88f;
+      border: 14px solid #111827;
+      border-radius: 13px;
+      padding: 21px 16px 12px;
+      aspect-ratio: 1.08;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #1b402e;
+      box-shadow: inset 0 0 24px #41613d70;
+    }
+
+    .screen .pixel {
+      font: 900 2rem/1.2 ui-monospace, monospace;
+      letter-spacing: -.07em;
+      text-align: center;
+    }
+
+    .screen small {
+      text-align: center;
+      font: 700 .65rem monospace;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 25px 0 0;
+    }
+
+    .dpad {
+      width: 77px;
+      height: 77px;
+      position: relative;
+    }
+
+    .dpad::before,
+    .dpad::after {
+      content: "";
+      position: absolute;
+      background: #0a111e;
+      border-radius: 4px;
+    }
+
+    .dpad::before {
+      width: 27px;
+      height: 77px;
+      left: 25px;
+    }
+
+    .dpad::after {
+      width: 77px;
+      height: 27px;
+      top: 25px;
+    }
+
+    .ab {
+      display: flex;
+      gap: 14px;
+      transform: rotate(-20deg);
+    }
+
+    .ab span {
+      background: #0d1523;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      font-size: .7rem;
+      font-weight: 800;
+    }
+
+    /* Sections */
+
+    .section {
+      padding: 60px 0;
+      border-top: 1px solid #ffffff17;
+    }
+
+    .section h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+      letter-spacing: -.045em;
+      line-height: 1.13;
+      margin: 6px 0 24px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin: 0 0 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(160deg, var(--panel2), var(--panel));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .card .label {
+      color: var(--muted);
+      font-size: .77rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-top: 18px;
+    }
+
+    .card h3 {
+      margin: 10px 0 7px;
+      font-size: 1.25rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .card .btn {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .filetype {
+      font: 800 .85rem ui-monospace, monospace;
+      color: var(--green);
+      background: #9df46d1b;
+      border-radius: 6px;
+      padding: 5px 9px;
+    }
+
+    .warning-label {
+      color: var(--orange) !important;
+      font-weight: 800;
+    }
+
+    /* Installation */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 13px;
+      counter-reset: steps;
+    }
+
+    .step {
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel);
+      display: flex;
+      gap: 17px;
+    }
+
+    .step::before {
+      counter-increment: steps;
+      content: counter(steps);
+      flex: 0 0 35px;
+      height: 35px;
+      border-radius: 10px;
+      background: #9df46d1c;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .step h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .step p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .step a { color: var(--blue); }
+
+    .note {
+      border: 1px solid #957947;
+      background: #ffc77812;
+      padding: 18px 20px;
+      border-radius: 14px;
+      color: #f4d8a9;
+      margin-top: 23px;
+      font-size: .91rem;
+    }
+
+    /* Tableaux */
+
+    .twocol, .save {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .92rem;
+    }
+
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 7px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    tr:last-child td { border: 0; }
+
+    kbd {
+      background: #ffffff12;
+      border: 1px solid #ffffff35;
+      border-bottom-width: 3px;
+      border-radius: 6px;
+      padding: 2px 7px;
+      white-space: nowrap;
+      font-family: inherit;
+      font-size: .83em;
+    }
+
+    .save .card { border-color: #638654; }
+
+    .save .num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--green);
+    }
+
+    /* Footer */
+
+    footer {
+      padding: 36px 24px;
+      color: var(--muted);
+      border-top: 1px solid #ffffff17;
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .signature {
+      margin-top: 22px;
+      color: var(--green);
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 55px 0;
+      }
+
+      .device { max-width: 275px; }
+
+      .grid, .steps, .twocol, .save {
+        grid-template-columns: 1fr;
+      }
+
+      nav .links { display: none; }
+      .section { padding: 44px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
+  </style>
 </head>
 
 <body>
 
-<nav>
-  <div class="brand">
-    <span class="brand-icon">▣</span>
-    NUMWORKS <span>/ GB</span>
-  </div>
+  <!-- NAVIGATION -->
 
-  <div class="links">
-    <a href="#telechargements">Téléchargements</a>
-    <a href="#installation">Installation</a>
-    <a href="#commandes">Commandes</a>
-    <a href="#sauvegarde">Sauvegardes</a>
-  </div>
-</nav>
+  <nav>
+    <div class="brand">
+      <span class="brand-icon">▣</span>
+      NUMWORKS <span>/ GB</span>
+    </div>
 
-<main class="wrap">
+    <div class="links">
+      <a href="#telechargements">Téléchargements</a>
+      <a href="#installation">Installation</a>
+      <a href="#commandes">Commandes</a>
+      <a href="#sauvegarde">Sauvegardes</a>
+    </div>
+  </nav>
 
-  <!-- ACCUEIL -->
+  <main class="wrap">
 
-  <section class="hero">
-    <div>
-      <div class="eyebrow">Guide pratique · NumWorks</div>
+    <!-- ACCUEIL -->
 
-      <h1>
-        La Game Boy.<br>
-        <span>Dans ta calculatrice.</span>
-      </h1>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Guide pratique · NumWorks</div>
 
-      <p>
-        Installe Peanut-GB, prépare ton fichier de jeu
-        et retrouve toutes les commandes et les étapes
-        pour sauvegarder ta progression.
+        <h1>
+          La Game Boy.<br>
+          <span>Dans ta calculatrice.</span>
+        </h1>
+
+        <p>
+          Installe Peanut-GB, prépare ton fichier de jeu
+          et retrouve toutes les commandes et les étapes
+          pour sauvegarder ta progression.
+        </p>
+
+        <div class="actions">
+          <a class="btn" href="#telechargements">
+            ↓ Voir les fichiers
+          </a>
+
+          <a class="btn outline" href="#installation">
+            Lire le guide →
+          </a>
+        </div>
+      </div>
+
+      <div class="device" aria-label="Illustration d'une console rétro">
+        <div class="screen">
+          <small>PEANUT-GB · READY</small>
+
+          <div class="pixel">
+            GAME<br>BOY<br>▦ ▦ ▦
+          </div>
+
+          <small>PRESS START</small>
+        </div>
+
+        <div class="controls">
+          <div class="dpad"></div>
+
+          <div class="ab">
+            <span>B</span>
+            <span>A</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÉLÉCHARGEMENTS -->
+
+    <section class="section" id="telechargements">
+      <div class="eyebrow">01 / Fichiers</div>
+      <h2>Tout ce qu'il te faut.</h2>
+
+      <p class="sub">
+        Télécharge l'émulateur et choisis un jeu Game Boy.
       </p>
 
-      <div class="actions">
-        <a class="btn" href="#telechargements">
-          ↓ Voir les fichiers
-        </a>
+      <div class="grid">
 
-        <a class="btn outline" href="#installation">
-          Lire le guide →
-        </a>
+        <!-- ÉMULATEUR -->
+
+        <article class="card">
+          <span class="filetype">.NWA</span>
+          <div class="label">Émulateur</div>
+
+          <h3>Peanut-GB 1.2.3</h3>
+
+          <p>
+            L'application à installer sur la calculatrice.
+            Fichier provenant du site de l'auteur.
+          </p>
+
+          <a
+            class="btn outline"
+            href="https://nwagyu.org/assets/apps/peanutgb-1.2.3.nwa"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ↓ Télécharger l'émulateur ↗
+          </a>
+        </article>
+
+        <!-- FLAPPY BOY -->
+
+        <article class="card">
+          <span class="filetype">.GB</span>
+          <div class="label">Jeu de test libre</div>
+
+          <h3>Flappy Boy</h3>
+
+          <p>
+            Un petit jeu pour vérifier que l'installation
+            de Peanut-GB fonctionne correctement.
+          </p>
+
+          <a
+            class="btn outline"
+            href="https://raw.githubusercontent.com/nwagyu/peanutgb/master/src/flappyboy.gb"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ↓ Télécharger Flappy Boy ↗
+          </a>
+        </article>
+
+        <!-- POKÉMON ROUGE -->
+
+        <article class="card" style="border-color: #b76a6a;">
+          <span class="filetype">.GB</span>
+          <div class="label">Jeu Game Boy · Français</div>
+
+          <h3>Pokémon Version Rouge</h3>
+
+          <p>
+            Pokémon Rouge en français pour Game Boy.
+          </p>
+
+          <a
+            class="btn"
+            href="./Pokemon - Version Rouge (France) (SGB Enhanced).gb"
+            download="Pokemon - Version Rouge (France) (SGB Enhanced).gb"
+          >
+            ↓ Télécharger Pokémon Rouge
+          </a>
+        </article>
+
+        <!-- POKÉMON BLEU -->
+
+        <article class="card" style="border-color: #5b9dff;">
+          <span class="filetype">.GB</span>
+          <div class="label">Jeu Game Boy · Français</div>
+
+          <h3>Pokémon Version Bleue</h3>
+
+          <p>
+            Pokémon Bleu en français pour Game Boy.
+          </p>
+
+          <p class="warning-label">
+            ⚠️ ROM non testée : son fonctionnement
+            avec Peanut-GB sur NumWorks n'a pas encore
+            été vérifié.
+          </p>
+
+          <a
+            class="btn outline"
+            href="./Pokemon - Version Bleue (France) (SGB Enhanced).gb"
+            download="Pokemon - Version Bleue (France) (SGB Enhanced).gb"
+          >
+            ↓ Télécharger Pokémon Bleu
+          </a>
+        </article>
+
       </div>
-    </div>
 
-    <div class="device" aria-label="Illustration d'une console rétro">
-      <div class="screen">
-        <small>PEANUT-GB · READY</small>
+      <div class="note">
+        ℹ️ Pokémon Rouge et Pokémon Bleu sont des jeux
+        protégés par le droit d'auteur.
+        Leur téléchargement et leur distribution nécessitent
+        les droits correspondants.
+      </div>
+    </section>
 
-        <div class="pixel">
-          GAME<br>BOY<br>▦ ▦ ▦
+    <!-- INSTALLATION -->
+
+    <section class="section" id="installation">
+      <div class="eyebrow">02 / Installation</div>
+      <h2>Prêt en quelques étapes.</h2>
+
+      <div class="steps">
+
+        <div class="step">
+          <div>
+            <h3>Télécharge les fichiers</h3>
+            <p>
+              Récupère Peanut-GB au format <code>.nwa</code>
+              et un jeu au format <code>.gb</code>.
+            </p>
+          </div>
         </div>
 
-        <small>PRESS START</small>
-      </div>
-
-      <div class="controls">
-        <div class="dpad"></div>
-        <div class="ab">
-          <span>B</span>
-          <span>A</span>
+        <div class="step">
+          <div>
+            <h3>Connecte la NumWorks</h3>
+            <p>
+              Utilise un câble USB permettant
+              le transfert de données.
+            </p>
+          </div>
         </div>
+
+        <div class="step">
+          <div>
+            <h3>Ouvre le site NumWorks</h3>
+            <p>
+              Rendez-vous sur
+              <a
+                href="https://my.numworks.com/apps"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                my.numworks.com/apps
+              </a>
+              avec Chrome ou Edge.
+            </p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div>
+            <h3>Installe l'émulateur</h3>
+            <p>
+              Sélectionne le fichier <code>.nwa</code>,
+              puis le jeu <code>.gb</code> dans
+              « external data ».
+
+              Clique sur Install et sélectionne
+              la calculatrice.
+            </p>
+          </div>
+        </div>
+
       </div>
-    </div>
-  </section>
 
-  <!-- TÉLÉCHARGEMENTS -->
+      <div class="note">
+        <strong>⚠️ Un seul jeu à la fois</strong>
 
-  <section class="section" id="telechargements">
-    <div class="eyebrow">01 / Fichiers</div>
-    <h2>Tout ce qu'il te faut.</h2>
+        <p>
+          Chaque installation de Peanut-GB utilise
+          un seul fichier <code>.gb</code>
+          comme données externes.
+        </p>
 
-    <p class="sub">
-      Télécharge l'émulateur et choisis un jeu Game Boy.
+        <p>
+          Tu peux installer Pokémon Rouge,
+          Pokémon Bleu ou Flappy Boy,
+          mais pas plusieurs jeux simultanément
+          dans la même application.
+        </p>
+
+        <p>
+          Pour changer de jeu, réinstalle Peanut-GB
+          en sélectionnant une autre ROM.
+          Pense à sauvegarder avant de remplacer le jeu.
+        </p>
+      </div>
+
+      <div class="note">
+        Si l'installation échoue, vérifie le modèle
+        de ta calculatrice, la version du système
+        et la compatibilité des applications externes.
+
+        <p>
+          Consulte également
+          <a
+            href="https://nwagyu.org/guide/apps/peanut-gb.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            la documentation Peanut-GB
+          </a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- COMMANDES -->
+
+    <section class="section" id="commandes">
+      <div class="eyebrow">03 / Contrôles</div>
+      <h2>Les touches à connaître.</h2>
+
+      <div class="twocol">
+
+        <div class="card">
+          <h3>Dans le jeu</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>NumWorks</th>
+                <th>Game Boy</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><kbd>Flèches</kbd></td>
+                <td>Déplacement</td>
+              </tr>
+
+              <tr>
+                <td><kbd>Retour</kbd></td>
+                <td>A</td>
+              </tr>
+
+              <tr>
+                <td><kbd>OK</kbd></td>
+                <td>B</td>
+              </tr>
+
+              <tr>
+                <td><kbd>Shift</kbd></td>
+                <td>Select</td>
+              </tr>
+
+              <tr>
+                <td><kbd>Home</kbd> ou <kbd>⌫</kbd></td>
+                <td>Start</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>Options de l'émulateur</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Touche</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td>
+                <td>Changer la palette</td>
+              </tr>
+
+              <tr>
+                <td><kbd>+</kbd> / <kbd>−</kbd></td>
+                <td>Grand / petit affichage</td>
+              </tr>
+
+              <tr>
+                <td><kbd>7</kbd></td>
+                <td>Temps d'image</td>
+              </tr>
+
+              <tr>
+                <td><kbd>9</kbd></td>
+                <td>Activer On/Off et Home</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SAUVEGARDES -->
+
+    <section class="section" id="sauvegarde">
+      <div class="eyebrow">04 / Progression</div>
+      <h2>Sauvegarde en deux temps.</h2>
+
+      <p class="sub">
+        Sauvegarder dans le jeu ne suffit pas toujours
+        à conserver les données après la fermeture.
+      </p>
+
+      <div class="save">
+
+        <div class="card">
+          <div class="num">01</div>
+          <h3>Dans Pokémon</h3>
+
+          <p>
+            Ouvre le menu avec <kbd>⌫</kbd> (Start),
+            sélectionne <strong>SAUVER</strong>
+            et valide avec <kbd>Retour</kbd> (A).
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="num">02</div>
+          <h3>Dans Peanut-GB</h3>
+
+          <p>
+            Appuie sur <kbd>Boîte à outils</kbd>
+            pour écrire la sauvegarde,
+            ou sur <kbd>0</kbd>
+            pour sauvegarder et quitter.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="note">
+        ✓ Conseil : sauvegarde, quitte avec <kbd>0</kbd>,
+        relance l'application et vérifie que
+        ta progression a été conservée.
+      </div>
+    </section>
+
+    <!-- MODE EXAMEN -->
+
+    <section class="section">
+      <div class="eyebrow">À savoir</div>
+      <h2>Et le mode examen ?</h2>
+
+      <p class="sub">
+        Les applications externes peuvent ne pas
+        être autorisées pendant les examens.
+
+        Vérifie le règlement applicable et retire
+        les applications concernées si nécessaire.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- PIED DE PAGE -->
+
+  <footer>
+    <p>
+      Guide indépendant, non affilié à NumWorks
+      ou Nintendo. Peanut-GB est un projet tiers.
     </p>
 
-    <div class="grid">
+    <div class="footer-links">
+      <a
+        href="https://nwagyu.org/guide/apps/peanut-gb.html"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Documentation Peanut-GB
+      </a>
 
-      <!-- ÉMULATEUR -->
+      <a
+        href="https://github.com/bibouze/numworks-gb-guide"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
 
-      <article class="card">
-        <span class="filetype">.NWA</span>
-        <div class="label">Émulateur</div>
-
-        <h3>Peanut-GB 1.2.3</h3>
-
-        <p>
-          L'application à installer sur la calculatrice.
-          Fichier provenant du site de l'auteur.
-        </p>
-
-        <a
-          class="btn outline"
-          href="https://nwagyu.org/assets/apps/peanutgb-1.2.3.nwa"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ↓ Télécharger l'émulateur ↗
-        </a>
-      </article>
-
-      <!-- FLAPPY BOY -->
-
-      <article class="card">
-        <span class="filetype">.GB</span>
-        <div class="label">Jeu de test libre</div>
-
-        <h3>Flappy Boy</h3>
-
-        <p>
-          Un petit jeu pour vérifier que l'installation
-          de Peanut-GB fonctionne correctement.
-        </p>
-
-        <a
-          class="btn outline"
-          href="https://raw.githubusercontent.com/nwagyu/peanutgb/master/src/flappyboy.gb"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ↓ Télécharger Flappy Boy ↗
-        </a>
-      </article>
-
-      <!-- POKÉMON ROUGE : RACINE DU PROJET -->
-
-      <article class="card" style="border-color: #b76a6a;">
-        <span class="filetype">.GB</span>
-        <div class="label">Jeu Game Boy · Français</div>
-
-        <h3>Pokémon Version Rouge</h3>
-
-        <p>
-          Pokémon Rouge en français pour Game Boy.
-        </p>
-
-        <a
-          class="btn"
-          href="./rouge.gb"
-          download="rouge.gb"
-        >
-          ↓ Télécharger Pokémon Rouge
-        </a>
-      </article>
-
-      <!-- POKÉMON BLEU : RACINE DU PROJET -->
-
-      <article class="card" style="border-color: #5b9dff;">
-        <span class="filetype">.GB</span>
-        <div class="label">Jeu Game Boy · Français</div>
-
-        <h3>Pokémon Version Bleue</h3>
-
-        <p>
-          Pokémon Bleu en français pour Game Boy.
-        </p>
-
-        <p class="warning-label">
-          ⚠️ ROM non testée : son fonctionnement
-          avec Peanut-GB sur NumWorks n'a pas
-          encore été vérifié.
-        </p>
-
-        <a
-          class="btn outline"
-          href="./bleu.gb"
-          download="bleu.gb"
-        >
-          ↓ Télécharger Pokémon Bleu
-        </a>
-      </article>
-
+      <a
+        href="https://github.com/bibouze/numworks-gb-guide/blob/main/LICENSE"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Licence MIT
+      </a>
     </div>
 
-    <div class="note">
-      ℹ️ Pokémon Rouge et Pokémon Bleu sont des jeux
-      protégés par le droit d'auteur.
-      Leur téléchargement et leur distribution nécessitent
-      les droits correspondants.
-    </div>
-  </section>
+    <div class="signature">by bibouze</div>
+    <p>© 2026 bibouze</p>
+  </footer>
 
-  <!-- INSTALLATION -->
+  <!-- ANIMATION DU TITRE -->
 
-  <section class="section" id="installation">
-    <div class="eyebrow">02 / Installation</div>
-    <h2>Prêt en quelques étapes.</h2>
+  <script>
+    const titre = "by bibouze";
+    let position = 0;
+    let suppression = false;
 
-    <div class="steps">
+    function animerTitre() {
+      document.title = titre.substring(0, position) + "│";
 
-      <div class="step">
-        <div>
-          <h3>Télécharge les fichiers</h3>
-          <p>
-            Récupère Peanut-GB au format <code>.nwa</code>
-            et un jeu au format <code>.gb</code>.
-          </p>
-        </div>
-      </div>
+      if (!suppression) {
+        position++;
 
-      <div class="step">
-        <div>
-          <h3>Connecte la NumWorks</h3>
-          <p>
-            Utilise un câble USB permettant
-            le transfert de données.
-          </p>
-        </div>
-      </div>
+        if (position > titre.length) {
+          suppression = true;
+          setTimeout(animerTitre, 2000);
+          return;
+        }
+      } else {
+        position--;
 
-      <div class="step">
-        <div>
-          <h3>Ouvre le site NumWorks</h3>
-          <p>
-            Rendez-vous sur
-            <a href="https://my.numworks.com/apps"
-               target="_blank" rel="noopener noreferrer">
-              my.numworks.com/apps
-            </a>
-            avec Chrome ou Edge.
-          </p>
-        </div>
-      </div>
+        if (position < 0) {
+          position = 0;
+          suppression = false;
+          setTimeout(animerTitre, 700);
+          return;
+        }
+      }
 
-      <div class="step">
-        <div>
-          <h3>Installe l'émulateur</h3>
-          <p>
-            Sélectionne le fichier <code>.nwa</code>,
-            puis le jeu <code>.gb</code> dans
-            « external data ».
-
-            Clique sur Install et sélectionne
-            la calculatrice.
-          </p>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="note">
-      <strong>⚠️ Un seul jeu à la fois</strong>
-
-      <p>
-        Chaque installation de Peanut-GB utilise
-        un seul fichier <code>.gb</code>
-        comme données externes.
-      </p>
-
-      <p>
-        Tu peux installer Pokémon Rouge,
-        Pokémon Bleu ou Flappy Boy,
-        mais pas plusieurs jeux simultanément
-        dans la même application.
-      </p>
-
-      <p>
-        Pour changer de jeu, réinstalle Peanut-GB
-        en sélectionnant une autre ROM.
-        Pense à sauvegarder avant de remplacer le jeu.
-      </p>
-    </div>
-
-    <div class="note">
-      Si l'installation échoue, vérifie le modèle
-      de ta calculatrice, la version du système
-      et la compatibilité des applications externes.
-
-      <p>
-        Consulte également
-        <a
-          href="https://nwagyu.org/guide/apps/peanut-gb.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          la documentation Peanut-GB
-        </a>.
-      </p>
-    </div>
-  </section>
-
-  <!-- COMMANDES -->
-
-  <section class="section" id="commandes">
-    <div class="eyebrow">03 / Contrôles</div>
-    <h2>Les touches à connaître.</h2>
-
-    <div class="twocol">
-
-      <div class="card">
-        <h3>Dans le jeu</h3>
-
-        <table>
-          <thead>
-            <tr>
-              <th>NumWorks</th>
-              <th>Game Boy</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td><kbd>Flèches</kbd></td>
-              <td>Déplacement</td>
-            </tr>
-            <tr>
-              <td><kbd>Retour</kbd></td>
-              <td>A</td>
-            </tr>
-            <tr>
-              <td><kbd>OK</kbd></td>
-              <td>B</td>
-            </tr>
-            <tr>
-              <td><kbd>Shift</kbd></td>
-              <td>Select</td>
-            </tr>
-            <tr>
-              <td><kbd>Home</kbd> ou <kbd>⌫</kbd></td>
-              <td>Start</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="card">
-        <h3>Options de l'émulateur</h3>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Touche</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td>
-              <td>Changer la palette</td>
-            </tr>
-            <tr>
-              <td><kbd>+</kbd> / <kbd>−</kbd></td>
-              <td>Grand / petit affichage</td>
-            </tr>
-            <tr>
-              <td><kbd>7</kbd></td>
-              <td>Temps d'image</td>
-            </tr>
-            <tr>
-              <td><kbd>9</kbd></td>
-              <td>Activer On/Off et Home</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SAUVEGARDES -->
-
-  <section class="section" id="sauvegarde">
-    <div class="eyebrow">04 / Progression</div>
-    <h2>Sauvegarde en deux temps.</h2>
-
-    <p class="sub">
-      Sauvegarder dans le jeu ne suffit pas toujours
-      à conserver les données après la fermeture.
-    </p>
-
-    <div class="save">
-
-      <div class="card">
-        <div class="num">01</div>
-        <h3>Dans Pokémon</h3>
-
-        <p>
-          Ouvre le menu avec <kbd>⌫</kbd> (Start),
-          sélectionne <strong>SAUVER</strong>
-          et valide avec <kbd>Retour</kbd> (A).
-        </p>
-      </div>
-
-      <div class="card">
-        <div class="num">02</div>
-        <h3>Dans Peanut-GB</h3>
-
-        <p>
-          Appuie sur <kbd>Boîte à outils</kbd>
-          pour écrire la sauvegarde,
-          ou sur <kbd>0</kbd>
-          pour sauvegarder et quitter.
-        </p>
-      </div>
-
-    </div>
-
-    <div class="note">
-      ✓ Conseil : sauvegarde, quitte avec <kbd>0</kbd>,
-      relance l'application et vérifie que
-      ta progression a été conservée.
-    </div>
-  </section>
-
-  <!-- MODE EXAMEN -->
-
-  <section class="section">
-    <div class="eyebrow">À savoir</div>
-    <h2>Et le mode examen ?</h2>
-
-    <p class="sub">
-      Les applications externes peuvent ne pas
-      être autorisées pendant les examens.
-
-      Vérifie le règlement applicable et retire
-      les applications concernées si nécessaire.
-    </p>
-  </section>
-
-</main>
-
-<!-- PIED DE PAGE -->
-
-<footer>
-  <p>
-    Guide indépendant, non affilié à NumWorks
-    ou Nintendo. Peanut-GB est un projet tiers.
-  </p>
-
-  <div class="footer-links">
-    <a href="https://nwagyu.org/guide/apps/peanut-gb.html"
-       target="_blank" rel="noopener noreferrer">
-      Documentation Peanut-GB
-    </a>
-
-    <a href="https://github.com/bibouze/numworks-gb-guide"
-       target="_blank" rel="noopener noreferrer">
-      GitHub
-    </a>
-
-    <a href="https://github.com/bibouze/numworks-gb-guide/blob/main/LICENSE"
-       target="_blank" rel="noopener noreferrer">
-      Licence MIT
-    </a>
-  </div>
-
-  <div class="signature">by bibouze</div>
-  <p>© 2026 bibouze</p>
-</footer>
-
-<!-- ANIMATION DU TITRE DE L'ONGLET -->
-
-<script>
-const titre = "by Bibouze ✨";
-let position = 0;
-let suppression = false;
-
-function animerTitre() {
-  document.title = titre.substring(0, position) + "│";
-
-  if (!suppression) {
-    position++;
-
-    if (position > titre.length) {
-      suppression = true;
-      setTimeout(animerTitre, 2000);
-      return;
+      setTimeout(
+        animerTitre,
+        suppression ? 70 : 150
+      );
     }
-  } else {
-    position--;
 
-    if (position < 0) {
-      position = 0;
-      suppression = false;
-      setTimeout(animerTitre, 700);
-      return;
-    }
-  }
-
-  setTimeout(animerTitre, suppression ? 70 : 150);
-}
-
-animerTitre();
-</script>
+    animerTitre();
+  </script>
 
 </body>
 </html>
+
